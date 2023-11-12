@@ -12,8 +12,6 @@ pip install requests
 複製金鑰 (token)
 貼在.env裡面
 
-新增log.txt在資料夾裡
-新增memos.txt在資料夾裡
 執行HydrodynamicX
 
 HydrodynamicX = HydrodynamicXperiments = 流體力學.實驗版
