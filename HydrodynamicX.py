@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
-TOKEN = os.getenv("Stable-TOKEN")
+TOKEN = os.getenv("TOKEN")
 
 def bot_start():
     intents = discord.Intents.all()
@@ -34,7 +34,7 @@ def bot_start():
     @bot.event
     async def on_ready():
         print(f"Logged in as {bot.user}\n")
-        await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.5"))
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.6"))
 
     @bot.event
     async def on_message(message):
@@ -51,14 +51,15 @@ def bot_start():
         print(f"{username[:-2]} said '{user_message}' ({channel})")
         with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
             await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game("Saving Logs..."))
-            if x.tell() >= 4000:
+            if x.tell() >= 3000:
                 open(f"{message.guild.id}.msglog.txt", 'w', encoding="utf-8")
                 x.write("")
                 x.close()
             else:
-                x.write(f"**{username[:-2]}** 在**[{channel}]**說：**'{user_message}'**\n")
+                time = str(datetime.now())
+                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
                 x.close()
-                await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.5"))
+                await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.6"))
 
         if user_message == '操':
             await message.channel.send(f'{message.author.mention} 你有躁鬱症')
@@ -77,7 +78,7 @@ def bot_start():
             with open(f"{ctx.author.id}.txt", 'a', encoding = "utf-8") as mx:
                 mxl = mx.tell()
                 mx.close()
-                await ctx.response.send_message(f"```Version Date : 2023/11/4\nCode Name: HDNX (HydrodynamicX) / ver.1.10.5 / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
+                await ctx.response.send_message(f"```Version Date : 2023/11/12\nCode Name: HDNX (HydrodynamicX) / ver.1.10.6 / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
     @bsc(name = "操", description = "操")
     async def fuk(fuk, 訊息: str):
         await fuk.response.send_message(f"操！{訊息}")
@@ -163,25 +164,17 @@ def bot_start():
         await gsid.response.send_message(f"此伺服器ID: {gsid.guild.id}")
         await gsid.send(f'你的ID: {gsid.author.id}')
 
-    @bsc(name = "香香圖片get_waifu", description = "香香老婆圖片")
+    @bsc(name = "香香圖片get_waifu_pics", description = "要查看NSFW內容，請在NSFW頻道使用")
     async def gw(gw):
-        random.shuffle(dice)
-        pic = requests.get("https://api.waifu.pics/sfw/waifu")
+        if gw.channel.nsfw:
+            catg = 'nsfw'
+        else:
+            catg = 'sfw'
+        pic = requests.get(f"https://api.waifu.pics/{catg}/waifu")
         picj = pic.json()
         embed = discord.Embed()
         embed.set_image(url = picj['url'])
         await gw.response.send_message(embed=embed)
-
-    @bsc(name = "nsfw香香圖片get_nsfw_waifu", description = "提醒：要查看NSFW內容，請在NSFW頻道使用")
-    async def gnsw(gnsw):
-        pic = requests.get("https://api.waifu.pics/nsfw/waifu")
-        picj = pic.json()
-        embed = discord.Embed()
-        embed.set_image(url = picj['url'])
-        if gnsw.channel.nsfw:
-            await gnsw.response.send_message(embed=embed)
-        else:
-            await gnsw.response.send_message("禁止色色！死刑！")
 
     @bsc(name = "neko貓貓香箱", description = "得到貓貓圖片")
     async def gneko(gneko):
