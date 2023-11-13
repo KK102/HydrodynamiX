@@ -25,6 +25,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
+version = '1.11.0'
+verdate = '2023/11/13'
 
 def bot_start():
     intents = discord.Intents.all()
@@ -34,7 +36,7 @@ def bot_start():
     @bot.event
     async def on_ready():
         print(f"Logged in as {bot.user}\n")
-        await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.6"))
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"HDNX ver {version}"))
 
     @bot.event
     async def on_message(message):
@@ -59,16 +61,37 @@ def bot_start():
                 time = str(datetime.now())
                 x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
                 x.close()
-                await bot.change_presence(status=discord.Status.online, activity=discord.Game("HDNX ver 1.10.6"))
-
-        if user_message == '操':
-            await message.channel.send(f'{message.author.mention} 你有躁鬱症')
-        if user_message == '幹你娘':
-            await message.channel.send(f'{message.author.mention} chill bruv')
-
-
+                await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"HDNX ver {version}"))
+        
+        with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as x:
+            with open(f"{message.guild.id}.config.txt", 'r', encoding="utf-8") as cfg:
+                #config = open(f"{message.guild.id}.config.txt", 'r')
+                config = str(cfg.read(3))
+                if config == 'yes':
+                    if user_message == '操':
+                        await message.channel.send(f'{message.author.mention} 你有躁鬱症')
+                    if user_message == '幹你娘':
+                        await message.channel.send(f'{message.author.mention} chill bruv')
+                elif config == 'no':
+                    return
+                cfg.close()
+                
+    #slash command start:
     bsc = bot.slash_command
     dice = [1,2,3,4,5,6]
+
+    @bsc(name = "情緒管理模組設定", description = "自動偵測冒犯字詞, 請輸入yes/no")
+    async def emm(emm, 狀態: str):
+        with open(f"{emm.guild.id}.config.txt", 'w', encoding="utf-8") as config:
+            if 狀態 == "yes":
+                config.write(狀態)
+                await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
+            elif 狀態 == "no":
+                config.write(狀態)
+                await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
+            else:
+                await emm.response.send_message("無效的輸入！")
+        config.close()
 
     @bsc(name = "狀態", description = "Bot Info")
     async def status(ctx):
@@ -78,7 +101,7 @@ def bot_start():
             with open(f"{ctx.author.id}.txt", 'a', encoding = "utf-8") as mx:
                 mxl = mx.tell()
                 mx.close()
-                await ctx.response.send_message(f"```Version Date : 2023/11/12\nCode Name: HDNX (HydrodynamicX) / ver.1.10.6 / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
+                await ctx.response.send_message(f"```Version Date : {verdate}\nCode Name: HDNX (HydrodynamicX) / ver.{version} / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
     @bsc(name = "操", description = "操")
     async def fuk(fuk, 訊息: str):
         await fuk.response.send_message(f"操！{訊息}")
@@ -87,10 +110,10 @@ def bot_start():
     async def chunithm(chunithm):
         await chunithm.response.send_message("https://bit.ly/46eJHWb")
     
-
     @bsc(name = "隨機本子random_hentai", description="隨機開啟nhentai本子(注意使用)")
     async def fuk(fuk):
         await fuk.response.send_message("本子內容不保證安全：<https://shorturl.at/jlY79>")
+    
     @bsc(name = "編寫備忘錄write_memo", description = "輸入備忘錄")
     async def wmemo(wmemo, 標題: str, 內容: str):
         author = str(wmemo.author)
@@ -104,13 +127,15 @@ def bot_start():
         with open(f"{rmemo.author.id}.txt", 'a+',encoding="utf-8") as f:
             with open(f"{rmemo.author.id}.txt", "r", encoding="utf-8") as t:
                 await rmemo.response.send_message(f"{author[:-2]} 的筆記本：\n- - -\n{t.read()}\n**(沒了)**")
-        
+                t.close()
+            
     @bsc(name = "清空備忘錄_clear_memo", description = "清除備忘錄")
     async def clrmem(clrmem):
         with open(f"{clrmem.author.id}.txt", 'a+',encoding="utf-8") as f:
             with open(f"{clrmem.author.id}.txt", 'w', encoding="utf-8") as x:
                 x.write("")
                 await clrmem.response.send_message("已清空備忘錄")
+                x.close()
 
     @bsc(name = "訊息紀錄msg_log", description = "讀取伺服器聊天紀錄")
     async def log(log):
@@ -118,17 +143,22 @@ def bot_start():
         with open(f"{id}.msglog.txt", "a+",encoding="utf-8") as logmes:
             with open(f"{id}.msglog.txt", "r", encoding="utf-8") as xx:
                 await log.response.send_message(f'此伺服器的聊天紀錄：\n{xx.read()}')
+            xx.close()
+        logmes.close()
     
     @bsc(name = "禁尻月倒數", description = "準備勝利")
     async def nnn(nnn):
         time = str(datetime.now())
         print(time)
-        passhur = int((int(time[8:10]) - 1) * 24 + int(time[11:13]))
-        passmin = int(passhur * 60 + int(time[14:16]))
-        passsec = int(passmin * 60 + int(time[17:19]))
-        remainhur = int(720 - passhur)
-        remainmin = int(43200 - passmin)
-        remainsec = int(2592000 - passsec)
+        if int(time[5:7]) != 11:
+            await nnn.response.send_message(f"還沒到11月，勇者\n請11月再來吧！")
+        else:
+            passhur = int((int(time[8:10]) - 1) * 24 + int(time[11:13]))
+            passmin = int(passhur * 60 + int(time[14:16]))
+            passsec = int(passmin * 60 + int(time[17:19]))
+            remainhur = int(720 - passhur)
+            remainmin = int(43200 - passmin)
+            remainsec = int(2592000 - passsec)
 
         await nnn.response.send_message(f"> 經過時間：\n> **{passhur}**小時 或 **{passsec}**秒\n> 距離NNN結束還剩下：\n> **{remainhur}**小時\n> **{remainmin}**分鐘\n> **{remainsec}**秒\n\n`註：單位之間不是僅換算，而是取各項之整數減去經過時間，並非四捨五入`")
     @bsc(name = "骰骰子roll_a_dice" , description = "骰骰子")
