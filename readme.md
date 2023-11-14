@@ -10,7 +10,7 @@ https://discord.com/api/oauth2/authorize?client_id=1159384275532132423&permissio
 - 事先準備
   - 去discord developers裡面建立機器人
 - 環境建構
-    - 安裝 **Python 3.10**
+    - 安裝 **Python 3.10 或以上**
     - 安裝適合自己的IDE (推薦 **Visual Studio Code**)
     - 必要套件安裝：
       - 在終端機裡面輸入：
@@ -19,7 +19,7 @@ https://discord.com/api/oauth2/authorize?client_id=1159384275532132423&permissio
         - pip install py-cord
         - pip install pycord
         - pip install request
-- 複製金鑰 (token) 貼在 **.env** 裡面
+- 複製金鑰 (token) 貼在 **.env** 裡面，覆蓋 **bot token here**
 - 在IDE內執行HydrodynamicX
 
 # 提供的功能：
