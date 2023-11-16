@@ -1,10 +1,12 @@
 # HydrodynamicX v1.11.0! 
 > aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
-
+> 
 > @nKai.Lab / feat.JT.0
+> 
+> Discord: @nkkai.k
 
 ## 官方版機器人邀請連結：
-https://discord.com/api/oauth2/authorize?client_id=1159384275532132423&permissions=9882683571440&scope=bot
+https://shorturl.at/ilvTX
 
 ## 自行建置使用方式：
 - 事先準備
