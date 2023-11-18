@@ -1,4 +1,4 @@
-# HydrodynamicX v1.11.0! 
+# HydrodynamicX v1.11.1! 
 > aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
 > 
 > @nKai.Lab / feat.JT.0
@@ -11,6 +11,8 @@ https://shorturl.at/ilvTX
 ## 自行建置使用方式：
 - 事先準備
   - 去discord developers裡面建立機器人
+  - 下載最新釋出的版本壓縮檔
+  - **解壓縮到一個空的資料夾** (**非常重要，這個資料夾會用來儲存所有log及其他必要檔案**)
 - 環境建構
     - 安裝 **Python 3.10 或以上**
     - 安裝適合自己的IDE (推薦 **Visual Studio Code**)
