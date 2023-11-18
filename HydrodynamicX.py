@@ -25,8 +25,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
-version = '1.11.0'
-verdate = '2023/11/13'
+version = '1.11.1'
+verdate = '2023/11/18'
 
 def bot_start():
     intents = discord.Intents.all()
@@ -45,6 +45,9 @@ def bot_start():
         
         username = str(message.author)
         if message.attachments:
+            with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
+                x.write(f"{username}傳送了一個或多個附件")
+                x.close()
             print(f"{username}傳送了一個或多個附件")
             return
         
@@ -52,10 +55,9 @@ def bot_start():
         channel = str(message.channel)
         print(f"{username[:-2]} said '{user_message}' ({channel})")
         with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
-            await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game("Saving Logs..."))
-            if x.tell() >= 3000:
+            if x.tell() >= 8000:
                 open(f"{message.guild.id}.msglog.txt", 'w', encoding="utf-8")
-                x.write("")
+                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
                 x.close()
             else:
                 time = str(datetime.now())
@@ -142,7 +144,8 @@ def bot_start():
         id = log.guild.id
         with open(f"{id}.msglog.txt", "a+",encoding="utf-8") as logmes:
             with open(f"{id}.msglog.txt", "r", encoding="utf-8") as xx:
-                await log.response.send_message(f'此伺服器的聊天紀錄：\n{xx.read()}')
+                logs = xx.readlines()
+                await log.response.send_message(f'此伺服器最近的聊天紀錄：\n> {logs[-8]}\n> {logs[-7]}\n> {logs[-6]}\n> {logs[-5]}\n> {logs[-4]}\n> {logs[-3]}\n> {logs[-2]}\n> {logs[-1]}')
             xx.close()
         logmes.close()
     
@@ -196,9 +199,13 @@ def bot_start():
 
     @bsc(name = "香香圖片get_waifu_pics", description = "要查看NSFW內容，請在NSFW頻道使用")
     async def gw(gw):
-        if gw.channel.nsfw:
-            catg = 'nsfw'
+        if gw.guild:
+            if gw.channel.nsfw:
+                catg = 'nsfw'
+            else:
+                catg = 'sfw'
         else:
+            print('Channel is DM, sending sfw waifu pics')
             catg = 'sfw'
         pic = requests.get(f"https://api.waifu.pics/{catg}/waifu")
         picj = pic.json()
