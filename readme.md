@@ -26,6 +26,14 @@ https://shorturl.at/ilvTX
 - 複製金鑰 (token) 貼在 **.env** 裡面，覆蓋 **bot token here**
 - 在IDE內執行HydrodynamicX
 
+# 11.1版線下另外更新：
+官方版HydrodynamiX伺服器已進行維護與更新，增加機器人在線穩定性：
+- 修復的已知問題：
+ - 機器人無預警下線(一周7次)
+ - 記憶體不足導致運行崩潰(windows 10 與4GB RAM 在 *32GB USB上運行)
+
+`*：Windows To Go`
+
 # 提供的功能：
 - **訊息紀錄：**
   - 紀錄伺服器內最近的幾條訊息
