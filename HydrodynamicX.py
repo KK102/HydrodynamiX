@@ -5,7 +5,7 @@
 
 #基本解釋
 #@bot.slash_command(name = "名稱", description = "描述")    //宣告一個新的指令
-#async def 定義名字(定義名字, a: str, b: str):              //定義指令動作，給名字，a和b為輸入框
+#async def 定義名字(定義名字, a: str, b: str):              //定義指令動作，給名字，a / b為輸入框
 #await wmemo.response.send_message('傳送訊息')             //當指令被呼叫時，回覆字串
     
 '''
@@ -64,7 +64,6 @@ def bot_start():
                 time = str(datetime.now())
                 x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
                 x.close()
-                await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"HDNX ver {version}"))
         
         with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as x:
             with open(f"{message.guild.id}.config.txt", 'r', encoding="utf-8") as cfg:
@@ -150,7 +149,14 @@ def bot_start():
         with open(f"{id}.msglog.txt", "a+",encoding="utf-8") as logmes:
             with open(f"{id}.msglog.txt", "r", encoding="utf-8") as xx:
                 logs = xx.readlines()
-                await log.response.send_message(f'此伺服器最近的聊天紀錄：\n> {logs[-8]}\n> {logs[-7]}\n> {logs[-6]}\n> {logs[-5]}\n> {logs[-4]}\n> {logs[-3]}\n> {logs[-2]}\n> {logs[-1]}')
+                lines = len(logs)
+                print(f'log 共有 {lines} 行')
+                if lines < 5:
+                    await log.response.send_message(f'此伺服器最近的聊天紀錄：')
+                    for i in range(lines,0,-1):
+                        await log.send(f'> {logs[-i]}')
+                else:
+                    await log.response.send_message(f'此伺服器最近的聊天紀錄：\n> {logs[-5]}\n> {logs[-4]}\n> {logs[-3]}\n> {logs[-2]}\n> {logs[-1]}')
             xx.close()
         logmes.close()
     
