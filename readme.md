@@ -1,4 +1,4 @@
-# HydrodynamicX v1.11.1! 
+# HydrodynamicX v1.11.2! 
 > aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
 > 
 > @nKai.Lab / feat.JT.0
