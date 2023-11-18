@@ -25,7 +25,7 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
-version = '1.11.1'
+version = '1.11.2'
 verdate = '2023/11/18'
 
 def bot_start():
@@ -35,8 +35,9 @@ def bot_start():
 
     @bot.event
     async def on_ready():
-        print(f"Logged in as {bot.user}\n")
-        await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"HDNX ver {version}"))
+        print(f"Logged in as {bot.user}")
+        print(f"current version: {version}")
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"使用'/'進行互動"))
 
     @bot.event
     async def on_message(message):
@@ -57,7 +58,7 @@ def bot_start():
         with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
             if x.tell() >= 8000:
                 open(f"{message.guild.id}.msglog.txt", 'w', encoding="utf-8")
-                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
+                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在 **[{channel}]** 說：**'{user_message}'**\n")
                 x.close()
             else:
                 time = str(datetime.now())
@@ -81,6 +82,10 @@ def bot_start():
     #slash command start:
     bsc = bot.slash_command
     dice = [1,2,3,4,5,6]
+
+    @bsc(name="檢查更新_update", description="獲得最後版本的HydrodynamiX")
+    async def upd(upd):
+        await upd.response.send_message(f"目前版本:{version}\n# [前往Github](https://github.com/nKiux/HydrodynamiX/releases)")
 
     @bsc(name = "情緒管理模組設定", description = "自動偵測冒犯字詞, 請輸入yes/no")
     async def emm(emm, 狀態: str):
