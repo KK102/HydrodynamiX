@@ -5,7 +5,7 @@
 
 #基本解釋
 #@bot.slash_command(name = "名稱", description = "描述")    //宣告一個新的指令
-#async def 定義名字(定義名字, a: str, b: str):              //定義指令動作，給名字，a / b為輸入框
+#async def 定義名字(定義名字, a: str, b: str):              //定義指令動作，給名字，a和b為輸入框
 #await wmemo.response.send_message('傳送訊息')             //當指令被呼叫時，回覆字串
     
 '''
