@@ -7,15 +7,22 @@
 #@bot.slash_command(name = "名稱", description = "描述")    //宣告一個新的指令
 #async def 定義名字(定義名字, a: str, b: str):              //定義指令動作，給名字，a / b為輸入框
 #await wmemo.response.send_message('傳送訊息')             //當指令被呼叫時，回覆字串
-    
+
+
 '''
-please pip install listed down below:
-discord
-python-dotenv
-py-cord
-pycord
-requests
+Code代碼
+
+1 = 機器人正常開啟
+E1 = 指令無法在私訊使用
 '''
+
+# 請依序pip install下列組件:
+# discord
+# python-dotenv
+# py-cord
+# pycord
+# requests
+
 import discord
 import os
 import random
@@ -25,8 +32,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
-version = '1.11.2'
-verdate = '2023/11/18'
+version = '1.11.3'
+verdate = '2023/11/25'
 
 def bot_start():
     intents = discord.Intents.all()
@@ -35,48 +42,51 @@ def bot_start():
 
     @bot.event
     async def on_ready():
-        print(f"Logged in as {bot.user}")
-        print(f"current version: {version}")
-        await bot.change_presence(status=discord.Status.online, activity=discord.Game(f"使用'/'進行互動"))
+        print(f"{bot.user} Code: 1")
+        print(f"目前版本: {version}")
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="使用/進行更多操作"))
 
     @bot.event
     async def on_message(message):
-        if message.author == bot.user:
-            return
-        
-        username = str(message.author)
-        if message.attachments:
+        try:
+            if message.author == bot.user:
+                return
+            
+            username = str(message.author)
+            if message.attachments:
+                with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
+                    x.write(f"{username}傳送了一個或多個附件")
+                    x.close()
+                print(f"{username}傳送了一個或多個附件")
+                return
+            
+            user_message = str(message.content)
+            channel = str(message.channel)
+            print(f"{username[:-2]} said '{user_message}' ({channel})")
             with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
-                x.write(f"{username}傳送了一個或多個附件")
-                x.close()
-            print(f"{username}傳送了一個或多個附件")
-            return
-        
-        user_message = str(message.content)
-        channel = str(message.channel)
-        print(f"{username[:-2]} said '{user_message}' ({channel})")
-        with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
-            if x.tell() >= 8000:
-                open(f"{message.guild.id}.msglog.txt", 'w', encoding="utf-8")
-                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在 **[{channel}]** 說：**'{user_message}'**\n")
-                x.close()
-            else:
-                time = str(datetime.now())
-                x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
-                x.close()
-        
-        with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as x:
-            with open(f"{message.guild.id}.config.txt", 'r', encoding="utf-8") as cfg:
-                #config = open(f"{message.guild.id}.config.txt", 'r')
-                config = str(cfg.read(3))
-                if config == 'yes':
-                    if user_message == '操':
-                        await message.channel.send(f'{message.author.mention} 你有躁鬱症')
-                    if user_message == '幹你娘':
-                        await message.channel.send(f'{message.author.mention} chill bruv')
-                elif config == 'no':
-                    return
-                cfg.close()
+                if x.tell() >= 8000:
+                    open(f"{message.guild.id}.msglog.txt", 'w', encoding="utf-8")
+                    x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在 **[{channel}]** 說：**'{user_message}'**\n")
+                    x.close()
+                else:
+                    time = str(datetime.now())
+                    x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
+                    x.close()
+            
+            with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as x:
+                with open(f"{message.guild.id}.config.txt", 'r', encoding="utf-8") as cfg:
+                    #config = open(f"{message.guild.id}.config.txt", 'r')
+                    config = str(cfg.read(3))
+                    if config == 'yes':
+                        if user_message == '操':
+                            await message.channel.send(f'{message.author.mention} 你有躁鬱症')
+                        if user_message == '幹你娘':
+                            await message.channel.send(f'{message.author.mention} chill bruv')
+                    elif config == 'no':
+                        return
+                    cfg.close()
+        except:
+            print(f'-有人私訊機器人！\n-訊息：{user_message}')
                 
     #slash command start:
     bsc = bot.slash_command
@@ -88,26 +98,34 @@ def bot_start():
 
     @bsc(name = "情緒管理模組設定", description = "自動偵測冒犯字詞, 請輸入yes/no")
     async def emm(emm, 狀態: str):
-        with open(f"{emm.guild.id}.config.txt", 'w', encoding="utf-8") as config:
-            if 狀態 == "yes":
-                config.write(狀態)
-                await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
-            elif 狀態 == "no":
-                config.write(狀態)
-                await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
-            else:
-                await emm.response.send_message("無效的輸入！")
-        config.close()
+        try:
+            with open(f"{emm.guild.id}.config.txt", 'w', encoding="utf-8") as config:
+                if 狀態 == "yes":
+                    config.write(狀態)
+                    await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
+                elif 狀態 == "no":
+                    config.write(狀態)
+                    await emm.response.send_message(f"情緒管理模組已被設定為{狀態}")
+                else:
+                    await emm.response.send_message("無效的輸入！")
+            config.close()
+        except:
+            print("代碼E1")
+            await emm.response.send_message("此指令不能在這裡使用喔！")
 
     @bsc(name = "狀態", description = "Bot Info")
     async def status(ctx):
-            with open(f"{ctx.guild.id}.msglog.txt", 'a', encoding = "utf-8") as x:
-                xl = x.tell()
-                x.close()
-            with open(f"{ctx.author.id}.txt", 'a', encoding = "utf-8") as mx:
-                mxl = mx.tell()
-                mx.close()
-                await ctx.response.send_message(f"```Version Date : {verdate}\nCode Name: HDNX (HydrodynamicX) / ver.{version} / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
+            try:
+                with open(f"{ctx.guild.id}.msglog.txt", 'a', encoding = "utf-8") as x:
+                    xl = x.tell()
+                    x.close()
+                with open(f"{ctx.author.id}.txt", 'a', encoding = "utf-8") as mx:
+                    mxl = mx.tell()
+                    mx.close()
+                    await ctx.response.send_message(f"```Version Date : {verdate}\nCode Name: HDNX (HydrodynamicX) / ver.{version} / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
+            except:
+                print("代碼E1")
+                await ctx.response.send_message("此指令不能在這裡使用喔！")
     @bsc(name = "操", description = "操")
     async def fuk(fuk, 訊息: str):
         await fuk.response.send_message(f"操！{訊息}")
@@ -145,20 +163,24 @@ def bot_start():
 
     @bsc(name = "訊息紀錄msg_log", description = "讀取伺服器聊天紀錄")
     async def log(log):
-        id = log.guild.id
-        with open(f"{id}.msglog.txt", "a+",encoding="utf-8") as logmes:
-            with open(f"{id}.msglog.txt", "r", encoding="utf-8") as xx:
-                logs = xx.readlines()
-                lines = len(logs)
-                print(f'log 共有 {lines} 行')
-                if lines < 5:
-                    await log.response.send_message(f'此伺服器最近的聊天紀錄：')
-                    for i in range(lines,0,-1):
-                        await log.send(f'> {logs[-i]}')
-                else:
-                    await log.response.send_message(f'此伺服器最近的聊天紀錄：\n> {logs[-5]}\n> {logs[-4]}\n> {logs[-3]}\n> {logs[-2]}\n> {logs[-1]}')
-            xx.close()
-        logmes.close()
+        try:
+            id = log.guild.id
+            with open(f"{id}.msglog.txt", "a+",encoding="utf-8") as logmes:
+                with open(f"{id}.msglog.txt", "r", encoding="utf-8") as xx:
+                    logs = xx.readlines()
+                    lines = len(logs)
+                    print(f'log 共有 {lines} 行')
+                    if lines < 5:
+                        await log.response.send_message(f'此伺服器最近的聊天紀錄：')
+                        for i in range(lines,0,-1):
+                            await log.send(f'> {logs[-i]}')
+                    else:
+                        await log.response.send_message(f'此伺服器最近的聊天紀錄：\n> {logs[-5]}\n> {logs[-4]}\n> {logs[-3]}\n> {logs[-2]}\n> {logs[-1]}')
+                xx.close()
+            logmes.close()
+        except:
+            print("代碼E1")
+            await log.response.send_message("此指令不能在這裡使用喔！")
     
     @bsc(name = "禁尻月倒數", description = "準備勝利")
     async def nnn(nnn):
@@ -205,8 +227,12 @@ def bot_start():
 
     @bsc(name = "獲得伺服器_get_id", description = "get a server id")
     async def gsid(gsid):
-        await gsid.response.send_message(f"此伺服器ID: {gsid.guild.id}")
-        await gsid.send(f'你的ID: {gsid.author.id}')
+        try:
+            await gsid.response.send_message(f"此伺服器ID: {gsid.guild.id}")
+            await gsid.send(f'你的ID: {gsid.author.id}')
+        except:
+            print("代碼E1")
+            await gsid.response.send_message("此指令不能在這裡用喔！")
 
     @bsc(name = "香香圖片get_waifu_pics", description = "要查看NSFW內容，請在NSFW頻道使用")
     async def gw(gw):
