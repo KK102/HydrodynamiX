@@ -1,4 +1,4 @@
-# HydrodynamicX v1.11.4! 
+# HydrodynamicX v1.12.0! 
 > aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
 > 
 > @nKai.Lab / feat.JT.0
@@ -42,6 +42,9 @@ https://shorturl.at/ilvTX
     - 改善長時上線穩定性
 
 # 提供的功能：
+- **早安能量！**
+  - 使用指令初始化後，在任意頻道輸入： `早安` / `早上好` 即可獲得早安能量，在能量到達25後，會傳送訊息通知！
+  - 讓您組隊起床！
 - **訊息紀錄：**
   - 紀錄伺服器內最近的幾條訊息
   - 支援**已被刪除的訊息**
