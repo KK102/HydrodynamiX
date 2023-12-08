@@ -11,7 +11,6 @@
 
 '''
 Code代碼
-
 1 = 機器人正常開啟
 E1 = 指令無法在私訊使用
 '''
@@ -32,8 +31,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
-version = '1.11.3'
-verdate = '2023/11/25'
+version = '1.12.0'
+verdate = '2023/12/8'
 
 def bot_start():
     intents = discord.Intents.all()
@@ -51,7 +50,7 @@ def bot_start():
         try:
             if message.author == bot.user:
                 return
-            
+
             username = str(message.author)
             if message.attachments:
                 with open(f"{message.guild.id}.msglog.txt", 'a', encoding="utf-8") as x:
@@ -59,7 +58,7 @@ def bot_start():
                     x.close()
                 print(f"{username}傳送了一個或多個附件")
                 return
-            
+
             user_message = str(message.content)
             channel = str(message.channel)
             print(f"{username[:-2]} said '{user_message}' ({channel})")
@@ -72,8 +71,9 @@ def bot_start():
                     time = str(datetime.now())
                     x.write(f"**{username[:-2]}** 於 **{time[:19]}** 在**[{channel}]**說：**'{user_message}'**\n")
                     x.close()
-            
-            with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as x:
+
+            with open(f"{message.guild.id}.config.txt", 'a', encoding="utf-8") as s:
+                s.close()
                 with open(f"{message.guild.id}.config.txt", 'r', encoding="utf-8") as cfg:
                     #config = open(f"{message.guild.id}.config.txt", 'r')
                     config = str(cfg.read(3))
@@ -84,13 +84,69 @@ def bot_start():
                             await message.channel.send(f'{message.author.mention} chill bruv')
                     elif config == 'no':
                         return
-                    cfg.close()
+
+                cfg.close()
+
+            engcnt = [1,2,3,4,5,6,7,8,9]
+            with open(f"{message.guild.id}.time.txt", 'r+', encoding="utf-8") as gmn:
+                print("time.txt loaded")
+                with open(f"{message.guild.id}.eng", 'r+', encoding="utf-8") as eng:
+                    if user_message == "早安" or user_message == "早上好":
+                        energy = str(eng.read())
+                        print("energy mod loaded")
+                        random.shuffle(engcnt)
+                        time = str(datetime.now())
+                        oldtime = str(gmn.read())
+                        print(oldtime[8:10])
+                        if time[8:10] == oldtime[8:10]:
+                            energy = int(energy) + engcnt[0]
+                            with open(f"{message.guild.id}.eng", 'w', encoding="utf-8") as sv:
+                                sv.write(f"{energy}")
+                                sv.close()
+                                eng.close()
+                                gmn.close()
+                                if user_message == "早上好":
+                                    await message.channel.send("https://tenor.com/view/john-xina-gif-25551214")
+                                await message.channel.send(f'早上好！ {message.author.mention}，今天已獲得能量{engcnt[0]}')
+                                if energy >= 25:
+                                    print("energy full")
+                                    await message.channel.send(f"今天的早安能量已滿！能量值：{energy}")
+                        else:
+                            print("New Day")
+                            with open(f"{message.guild.id}.eng", 'w', encoding="utf-8") as sv:
+                                energy = engcnt[0]
+                                sv.write(f"{energy}")
+                                sv.close()
+                            with open(f"{message.guild.id}.time.txt", 'w', encoding="utf-8") as tm:
+                                tm.write(f"{datetime.now()}")
+                                eng.close()
+                                gmn.close()
+                                await message.channel.send(f'早上好！ {message.author.mention}，今天是新的一天！ 已獲得能量{engcnt[0]}')
+
         except:
-            print(f'-有人私訊機器人！\n-訊息：{user_message}')
-                
+            print(f'-有人私訊機器人\n-訊息：{user_message}')
+            
     #slash command start:
     bsc = bot.slash_command
     dice = [1,2,3,4,5,6]
+
+    @bsc(name="初始化早安模組_initialize", description="重設並啟用模組")
+    async def init(init):
+        with open(f"{init.guild.id}.time.txt", 'a', encoding="utf-8") as setup:
+            setup.close()
+        with open(f"{init.guild.id}.eng", 'a', encoding="utf-8") as setup2:
+            setup2.close()
+        with open(f"{init.guild.id}.time.txt", 'w+', encoding="utf-8") as initialize:
+            time = str(datetime.now())
+            initialize.write(f"{time}")
+            initialize.close()
+        with open(f"{init.guild.id}.eng", 'w+', encoding="utf-8") as init2:
+            print('pass')
+            init2.write("0")
+            init2.close()
+        with open(f"{init.guild.id}.time.txt", 'r', encoding="utf-8") as test:
+            await init.response.send_message(f"時間標籤：{test.readline()}")
+            test.close()
 
     @bsc(name="檢查更新_update", description="獲得最後版本的HydrodynamiX")
     async def upd(upd):
@@ -119,10 +175,16 @@ def bot_start():
                 with open(f"{ctx.guild.id}.msglog.txt", 'a', encoding = "utf-8") as x:
                     xl = x.tell()
                     x.close()
+                try:
+                    with open(f"{ctx.guild.id}.eng", 'r', encoding='utf-8') as eng:
+                        energy = int(str(eng.read()))
+                except:
+                    energy = "此伺服器未啟用早安/晚安模組"
                 with open(f"{ctx.author.id}.txt", 'a', encoding = "utf-8") as mx:
                     mxl = mx.tell()
                     mx.close()
-                    await ctx.response.send_message(f"```Version Date : {verdate}\nCode Name: HDNX (HydrodynamicX) / ver.{version} / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}```")
+                    await ctx.response.send_message(f"```Version Date : {verdate}\nCode Name: HDNX (HydrodynamicX) / ver.{version} / Rose.\n本伺服器訊息Log大小：{xl}\n您的備忘錄大小：{mxl}\n伺服器早安能量：{energy}```")
+                
             except:
                 print("代碼E1")
                 await ctx.response.send_message("此指令不能在這裡使用喔！")
@@ -132,11 +194,11 @@ def bot_start():
     
     @bsc(name = '中二直播', description = "中二直播")
     async def chunithm(chunithm):
-        await chunithm.response.send_message("https://bit.ly/46eJHWb")
+        await chunithm.response.send_message("# [Amuse Town]<https://bit.ly/46eJHWb>\n# [CYGameworld]<https://www.youtube.com/@cygameworld>")
     
     @bsc(name = "隨機本子random_hentai", description="隨機開啟nhentai本子(注意使用)")
     async def fuk(fuk):
-        await fuk.response.send_message("本子內容不保證安全：<https://shorturl.at/jlY79>")
+        await fuk.response.send_message("# 神秘的傳送門：[隨機按鈕]<https://shorturl.at/jlY79>")
     
     @bsc(name = "編寫備忘錄write_memo", description = "輸入備忘錄")
     async def wmemo(wmemo, 標題: str, 內容: str):
@@ -152,6 +214,7 @@ def bot_start():
             with open(f"{rmemo.author.id}.txt", "r", encoding="utf-8") as t:
                 await rmemo.response.send_message(f"{author[:-2]} 的筆記本：\n- - -\n{t.read()}\n**(沒了)**")
                 t.close()
+                f.close()
             
     @bsc(name = "清空備忘錄_clear_memo", description = "清除備忘錄")
     async def clrmem(clrmem):
@@ -160,6 +223,7 @@ def bot_start():
                 x.write("")
                 await clrmem.response.send_message("已清空備忘錄")
                 x.close()
+                f.close()
 
     @bsc(name = "訊息紀錄msg_log", description = "讀取伺服器聊天紀錄")
     async def log(log):
@@ -261,7 +325,7 @@ def bot_start():
     @bsc(name = "pog", description = "use it or lose it")
     async def pog(pog):
         await pog.response.send_message(":nerd:")
-        await pog.send("[POG按鍵](<https://shorturl.at/fgBMX>)")
+        await pog.send("[POG按鍵](<https://bit.ly/pog-button>)")
 
     bot.run(TOKEN)
 
