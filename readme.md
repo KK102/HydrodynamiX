@@ -1,4 +1,4 @@
-# HydrodynamicX v1.12.0! 
+# HydrodynamicX v1.12.1! 
 > aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
 > 
 > @nKai.Lab / feat.JT.0
@@ -8,38 +8,27 @@
 ## 官方版機器人邀請連結：
 https://shorturl.at/ilvTX
 
-## 自行建置使用方式：
+## 自行建置使用方式 (1.12.1以及往後的版本)：
 - 事先準備
   - 去discord developers裡面建立機器人
   - 下載最新釋出的版本壓縮檔
   - **解壓縮到一個空的資料夾** (**非常重要，這個資料夾會用來儲存所有log及其他必要檔案**)
 - 環境建構
-    - 安裝 **Python 3.10 或以上**
-    - 安裝適合自己的IDE (推薦 **Visual Studio Code**)
-    - 必要套件安裝：
-      - 在終端機裡面輸入：
-        - pip install discord
-        - pip install python-dotenv
-        - pip install py-cord
-        - pip install pycord
-        - pip install request
-- 複製金鑰 (token) 貼在 **.env** 裡面，覆蓋 **bot token here**
-- 在IDE內執行HydrodynamicX
+  - 安裝 **Python 3.10**
+    - 3.10以上未測試
+  - 安裝適合自己的IDE
+    - HDNX 1.12.1 更新後此步驟不必要，若要修改程式才安裝
+  - 複製金鑰 (token) 貼在 **.env** 裡面，覆蓋 **bot token here**
+    - 範例：`TOKEN = '12345678'`
+  - 執行`start_bot.bat`
+    - 首次執行module安裝完後會自動關閉，重新啟動即可正常運作
+ 
+> 若需要1.12.1之前的版本可以查看壓縮檔內的`readme.txt`，最後一行修改為：`pip install requests`
 
-# 1.11.1 ~ 1.11.3官方HDNX更新：
-官方版HydrodynamiX伺服器已進行維護與更新，增加機器人在線穩定性：
-- 1.11.1
-  - 修復的已知問題
-    - 機器人無預警下線(一周7次)
-    - 記憶體不足導致運行崩潰(windows 10 與4GB RAM 在 *32GB USB上運行)
-`*：Windows To Go`
+- 常見問題：
 
-- 1.11.3
-  - 修復的已知問題
-    - 主機更換SSD，提升穩定性
-    - 減少意外下線次數
-  - 11/30新增
-    - 改善長時上線穩定性
+  - 若開啟`start_bot.bat`後一直閃退，則請您檢查：
+    - `.env`文件有沒有配置正確，請再檢查一次金鑰是否正確
 
 # 提供的功能：
 - **早安能量！**
