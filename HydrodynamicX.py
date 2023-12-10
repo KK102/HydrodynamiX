@@ -31,8 +31,8 @@ try:
 
     load_dotenv()
     TOKEN = os.getenv("TOKEN")
-    version = '1.12.0'
-    verdate = '2023/12/8'
+    version = '1.12.1'
+    verdate = '2023/12/10'
 
     def bot_start():
         intents = discord.Intents.all()
