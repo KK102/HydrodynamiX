@@ -22,6 +22,7 @@ https://shorturl.at/ilvTX
     - 範例：`TOKEN = '12345678'`
   - 執行`start_bot.bat`
     - 首次執行module安裝完後會自動關閉，重新啟動即可正常運作
+    - 也可手動安裝module(若無法啟動) https://github.com/nKiux/Discord-Bot-Setup
  
 > 若需要1.12.1之前的版本可以查看壓縮檔內的`readme.txt`，最後一行修改為：`pip install requests`
 
