@@ -1,8 +1,12 @@
-# HydrodynamicX v1.12.1! 
-> aka.HDNX, HydrodynamicXperiments, 流體力學.實驗版
+> 最後定期檢修日期：24/03/11
+> // 項目檢查結果：各項功能正常運作
+
+
+# 歡迎使用 HydrodynamicX!
+> 一個走著不同路的Discord機器人!
 > 
-> @nKai.Lab / feat.JT.0
-> 
+> @nKai.Lab
+>
 > Discord: @nkkai.k
 
 ## 官方版機器人邀請連結：
